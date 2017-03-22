@@ -10,6 +10,9 @@ public:
 		handCount = 0;
 		health = 40;
 		mana = 3;
+		for (int i = 0; i < 10; ++i) {
+			hand[i] = nullptr;
+		}
 	}
 	
 	Hero(const Hero& other) {
@@ -36,10 +39,11 @@ public:
 	}
 
 	void drawCard() {
-		int curr = deck.succCurrent();
-		if(handCount == 10)
-		if(curr > 0)
-			hand[handCount++] = deck.getCards()[curr];
+		if (handCount < 9) {
+			int curr = deck.succCurrent();
+			if (curr > 0)
+				hand[handCount++] = deck.getCards()[curr];
+		}
 	}
 
 	Card** getHand() {
@@ -54,14 +58,38 @@ public:
 		return mana;
 	}
 
-	void getDamage(size_t damage) {
+	void damaged(size_t damage) {
 		health = health - damage;
 	}
 
 	void printHand() {
 		for (int i = 0; i < handCount; ++i) {
+			printf("Card %i:", i + 1);
 			hand[i]->print();
 		}
+	}
+
+	void playedCard() {
+		handCount--;
+	}
+
+	void fixHand() {
+		if (handCount < 9) {
+			for (int i = 0; i < handCount; ++i) {
+				if (hand[i] == nullptr) {
+					hand[i] = hand[i + 1];
+				}
+			}
+			hand[9] = nullptr;
+		}
+	}
+
+	size_t getHandCount() {
+		return handCount;
+	}
+
+	void spendMana(size_t spent) {
+		mana -= spent;
 	}
 
 private:
