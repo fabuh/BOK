@@ -19,7 +19,7 @@ public:
 
 	void startGame() {
 		started = 1;
-		srand(time(NULL));
+		srand((unsigned int)time(NULL));
 		coin = rand() % 2;
 		size_t last = coin + 1;
 		size_t turnCount = 2;
@@ -32,6 +32,7 @@ public:
 			printf("The winner is Player 1");
 	}
 
+private:
 	void turn(size_t last, size_t turnCount) {
 		size_t now;
 		if (last == 1)
@@ -46,6 +47,12 @@ public:
 		printField();
 		pickOption(now);
 		fixMobs(now);
+		if (now == 1) {
+			player1.fixMana(turnCount/2);
+		}
+		else {
+			player2.fixMana(turnCount/2);
+		}
 	}
 
 	void pickOption(int now) {
@@ -60,9 +67,10 @@ public:
 		player.drawCard();
 
 		while (option != '3') {
-			printf("Pick an option: \n 1.Play Card \n 2.Attack with Mobs \n 3.End Turn \n");
+			option = '0';
+			printf("Pick an option: \n 1.Play Card \n 2.Attack with Mobs \n 3.End Turn");
 			while (option - '0' < 1 && option - '0' > 3) {
-				printf("Your choice: ");
+				printf("\nYour choice: ");
 				std::cin >> option;
 			}
 			if (option == '1') {
@@ -72,7 +80,7 @@ public:
 				hand = player.getHand();
 				player.printHand();
 				printf("Pick a card to play: ");
-				int num = 0;
+				size_t num = 0;
 				while (num < 1 && num > player.getHandCount()) {
 					std::cin >> num;
 				}
@@ -101,6 +109,12 @@ public:
 			}
 			else if (option == '2') {
 				passedTurn = 0;
+				for (int i = 0; i < 5; ++i) {
+					Mob* mob = field[i + !(now - 1) * 5];
+					if (mob != nullptr)
+						target(mob, 1, i + !(now - 1) * 5, now, 0);
+					mob->freeze();
+				}
 			}
 			else {
 				if (passedTurn = 1)
@@ -112,7 +126,7 @@ public:
 	void target(Card* card, bool mob, size_t posOnField, size_t now, bool played) {
 		printf("0 - player, 1-5 - mobs");
 		printf("Pick an enemy to attack: ");
-		int num;
+		int num = -1;
 		while (num < 0 || num > 5) {
 			std::cin >> num;
 		}
@@ -180,7 +194,7 @@ public:
 			if (field[i] == nullptr)
 				printf("Empty");
 			else
-				field[i]->print;
+				field[i]->print();
 		}
 		printf("Player 2:%i hp %i mana \n", player2.getHealth(), player2.getMana());
 	}

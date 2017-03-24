@@ -3,58 +3,53 @@
 
 class Deck {
 public:
-	Deck():cards(nullptr), count(0), current(0) { }
+	Deck() :count(0) {
+		for (int i = 0; i < 30; ++i) {
+			cards[i] = nullptr;
+		}
+	}
 
-	Deck(Card** newCards, size_t newCount, size_t newCurrent = 0) {
+	Deck(Card** newCards, size_t newCount = 0) {
 		count = newCount;
-		current = newCurrent;
-		cards = new Card*[count];
-		for (int i = 0; i < count; ++i) {
+		for (int i = 0; i < 30; ++i) {
 			cards[i] = newCards[i];
 		}
 	}
 
 	Deck(const Deck& other) {
 		count = other.count;
-		current = other.current;
-		cards = new Card*[count];
-		for (int i = 0; i < count; ++i) {
+		for (int i = 0; i < 30; ++i) {
 			cards[i] = other.cards[i];
 		}
 	}
 
 	const Deck& operator=(const Deck& other) {
 		if (this != &other) {
-			if (cards != nullptr)
-				delete[] cards;
 			count = other.count;
-			current = other.current;
-			cards = new Card*[count];
-			for (int i = 0; i < count; ++i) {
+			for (int i = 0; i < 30; ++i) {
 				cards[i] = other.cards[i];
 			}
 		}
 		return *this;
 	}
 
-
-	~Deck() {
-		if(cards != nullptr)
-			delete[] cards;
-	}
-
 	int succCurrent() {
-		if (current > count)
+		if (count > 30)
 			return -1;
-		return current++;
+		return count++;
 	}
 
 	Card** getCards() {
 		return cards;
 	}
 
+	void addCard(Card* newCard) {
+		if (count <= 30) {
+			cards[count++] = newCard;
+		}
+	}
+
 private:
-	Card** cards;
+	Card* cards[30];
 	size_t count;
-	size_t current;
 };

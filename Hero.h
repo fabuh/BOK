@@ -3,9 +3,11 @@
 
 class Hero {
 public:
-	Hero() :deck(Deck()), handCount(0), health(40), mana(3) { }
+	Hero() :deck(Deck()), name(" "), handCount(0), health(40), mana(3) { }
 
-	Hero(Deck newDeck) {
+	Hero(Deck newDeck, char* newName) {
+		for (int i = 0; i < 20; ++i)
+			name[i] = newName[i];
 		deck = newDeck;
 		handCount = 0;
 		health = 40;
@@ -16,6 +18,8 @@ public:
 	}
 	
 	Hero(const Hero& other) {
+		for (int i = 0; i < 20; ++i)
+			name[i] = other.name[i];
 		deck = other.deck;
 		for (int i = 0; i < 10; ++i) {
 			hand[i] = other.hand[i];
@@ -27,6 +31,8 @@ public:
 
 	const Hero& operator=(const Hero& other) {
 		if (this != &other) {
+			for (int i = 0; i < 20; ++i)
+				name[i] = other.name[i];
 			deck = other.deck;
 			for (int i = 0; i < 10; ++i) {
 				hand[i] = other.hand[i];
@@ -63,7 +69,7 @@ public:
 	}
 
 	void printHand() {
-		for (int i = 0; i < handCount; ++i) {
+		for (size_t i = 0; i < handCount; ++i) {
 			printf("Card %i:", i + 1);
 			hand[i]->print();
 		}
@@ -75,7 +81,7 @@ public:
 
 	void fixHand() {
 		if (handCount < 9) {
-			for (int i = 0; i < handCount; ++i) {
+			for (size_t i = 0; i < handCount; ++i) {
 				if (hand[i] == nullptr) {
 					hand[i] = hand[i + 1];
 				}
@@ -92,7 +98,26 @@ public:
 		mana -= spent;
 	}
 
+	void fixMana(size_t turn) {
+		if (turn < 5) {
+			mana = 3;
+		}
+		else if (turn < 7) {
+			mana = 7;
+		}
+		else mana = 11;
+	}
+
+	void print() {
+		printf("Name: %s \n", name);
+	}
+
+	char* getName() {
+		return name;
+	}
+
 private:
+	char name[20];
 	Deck deck;
 	Card* hand[10];
 	size_t handCount;
