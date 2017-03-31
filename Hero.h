@@ -5,13 +5,14 @@ class Hero {
 public:
 	Hero() :deck(Deck()), name(" "), handCount(0), health(40), mana(3) { }
 
-	Hero(Deck newDeck, char* newName) {
+	Hero(Deck &newDeck, char* newName) {
 		for (int i = 0; i < 20; ++i)
 			name[i] = newName[i];
 		deck = newDeck;
 		handCount = 0;
 		health = 40;
 		mana = 3;
+		deck = newDeck;
 		for (int i = 0; i < 10; ++i) {
 			hand[i] = nullptr;
 		}
@@ -114,6 +115,29 @@ public:
 
 	char* getName() {
 		return name;
+	}
+
+	void shuffleDeck() {
+		int arr[30];
+		for (int i = 0; i < 30; ++i) {
+			arr[i] = i;
+		}
+		srand((unsigned int)time(NULL));
+		int temp, num1, num2;
+		for (int i = 0; i < 500; ++i) {
+			num1 = rand() % 30, num2 = rand() % 30;
+			temp = arr[num1];
+			arr[num1] = arr[num2];
+			arr[num2] = temp;
+		}
+		Deck shuffled;
+		for (int i = 0; i < 30; ++i) {
+			*shuffled[i] = *deck[arr[i]];
+			shuffled.succCurrent();
+		}
+		for (int i = 0; i < 30; ++i) {
+			*deck[i] = *shuffled[arr[i]];
+		}
 	}
 
 private:

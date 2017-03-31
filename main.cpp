@@ -27,7 +27,7 @@ void createADeck(Card** cards, Deck* decks, int deckCount) {
 		chosenCards[i] = option;
 	}
 	for (int i = 0; i < 10; ++i) {
-		for (int i = 0; i < 3; ++i) {
+		for (int j = 0; j < 3; ++j) {
 			decks[deckCount].addCard(cards[chosenCards[i]]);
 		}
 	}
@@ -67,14 +67,14 @@ int main() {
 		if (option == '1') {
 			if (deckCount < 20)
 				createADeck(cards, decks, deckCount++);
-			printf("Deck %i was just created. \n\n\n", deckCount - 1);
+			printf("Deck %i was just created. \n\n\n", deckCount);
 		}
 		else if (option == '2' && deckCount > 0) {
 			printf("Pick a name for your hero. 20 symbols max length. \n");
 			std::string name;
 			std::cin >> name;
 			char name2[20];
-			for (int i = 0; i < name.size(); ++i) {
+			for (size_t i = 0; i < name.size(); ++i) {
 				name2[i] = name[i];
 			}
 			printf("Pick a deck. from 1 to %i. \n", deckCount);

@@ -1,5 +1,7 @@
 #pragma once
 #include "Card.h"
+#include <cstdlib>
+#include <time.h>
 
 class Deck {
 public:
@@ -47,6 +49,12 @@ public:
 		if (count <= 30) {
 			cards[count++] = newCard;
 		}
+	}
+
+	Card* operator[](int num) {
+		if (num >= 0 && num < 30)
+			return cards[num];
+		return nullptr;
 	}
 
 private:

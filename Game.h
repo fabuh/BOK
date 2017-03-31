@@ -1,13 +1,11 @@
 #pragma once
 #include "Hero.h"
-#include <cstdlib>
-#include <time.h>
 #include <string>
 #include <iostream>
 
 class Game {
 public:
-	Game(Hero forPlayer1, Hero forPlayer2) {
+	Game(Hero &forPlayer1, Hero &forPlayer2) {
 		player1 = forPlayer1;
 		player2 = forPlayer2;
 		started = 0;
@@ -20,9 +18,12 @@ public:
 	void startGame() {
 		started = 1;
 		srand((unsigned int)time(NULL));
-		coin = rand() % 2;
+		if(rand() % 2) coin = 1;
+		else coin = 0;
 		size_t last = coin + 1;
 		size_t turnCount = 2;
+		player1.shuffleDeck();
+		player2.shuffleDeck();
 		while (player1.getHealth() > 0 || player2.getHealth() > 0) {
 			turn(last, turnCount++);
 		}
