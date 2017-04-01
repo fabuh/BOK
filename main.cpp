@@ -73,16 +73,19 @@ int main() {
 			printf("Pick a name for your hero. 20 symbols max length. \n");
 			std::string name;
 			std::cin >> name;
-			char name2[20];
+			char* name2;
+			name2 = new char[name.size()+1];
 			for (size_t i = 0; i < name.size(); ++i) {
 				name2[i] = name[i];
 			}
+			name2[name.size()] = '\0';
 			printf("Pick a deck. from 1 to %i. \n", deckCount);
 			int option2 = 0;
 			while (option2 < 1 || option2 > deckCount)
 				std::cin >> option2;
 			heroes[heroCount++] = Hero(decks[option2-1], name2);
 			printf("Hero %s created. \n\n", name2);
+			delete[] name2;
 		}
 		else if (option == '2') {
 			printf("Create more Decks first. \n");
@@ -102,8 +105,7 @@ int main() {
 				printf("\nYour choice: ");
 				std::cin >> optionPlayer1;
 			}
-			printf("Player 1 picked hero %s. \n", heroes[optionPlayer1 - 1].getName());
-
+			printf("Player 1 picked hero %s. \n\n\n", heroes[optionPlayer1 - '0' -1].getName());
 
 			printf("Pick a hero for Player 2. \n");
 			for (int i = 0; i < heroCount; ++i) {
@@ -115,8 +117,8 @@ int main() {
 				printf("\nYour choice: ");
 				std::cin >> optionPlayer2;
 			}
-			printf("Player 2 picked hero %s. \n", heroes[optionPlayer2 - 1].getName());
-			Game theGame(heroes[optionPlayer1 - 1], heroes[optionPlayer2 - 1]);
+			printf("Player 2 picked hero %s. \n", heroes[optionPlayer2 - '0' - 1].getName());
+			Game theGame(heroes[optionPlayer1 - '0' - 1], heroes[optionPlayer2 - '0' - 1]);
 			theGame.startGame();
 		}
 	}

@@ -1,13 +1,17 @@
 #pragma once
 #include "Deck.h"
+#include <string>
 
 class Hero {
 public:
-	Hero() :deck(Deck()), name(" "), handCount(0), health(40), mana(3) { }
+	Hero() :deck(Deck()), name(nullptr), handCount(0), health(40), mana(3) { }
 
 	Hero(Deck &newDeck, char* newName) {
-		for (int i = 0; i < 20; ++i)
+		int len = strlen(newName);
+		name = new char[len+1];
+		for (int i = 0; i < len; ++i)
 			name[i] = newName[i];
+		name[len] = '\0';
 		deck = newDeck;
 		handCount = 0;
 		health = 40;
@@ -19,7 +23,10 @@ public:
 	}
 	
 	Hero(const Hero& other) {
-		for (int i = 0; i < 20; ++i)
+		int len = strlen(other.name);
+		name = new char[len+1];
+		name[len] = '\0';
+		for (int i = 0; i < len; ++i)
 			name[i] = other.name[i];
 		deck = other.deck;
 		for (int i = 0; i < 10; ++i) {
@@ -32,8 +39,13 @@ public:
 
 	const Hero& operator=(const Hero& other) {
 		if (this != &other) {
-			for (int i = 0; i < 20; ++i)
+			int len = strlen(other.name);
+			if(name != nullptr)
+				delete[] name;
+			name = new char[len+1];
+			for (int i = 0; i < len; ++i)
 				name[i] = other.name[i];
+			name[len] = '\0';
 			deck = other.deck;
 			for (int i = 0; i < 10; ++i) {
 				hand[i] = other.hand[i];
@@ -43,6 +55,10 @@ public:
 			mana = other.mana;
 		}
 		return *this;
+	}
+
+	~Hero() {
+		delete[] name;
 	}
 
 	void drawCard() {
@@ -132,16 +148,13 @@ public:
 		}
 		Deck shuffled;
 		for (int i = 0; i < 30; ++i) {
-			*shuffled[i] = *deck[arr[i]];
-			shuffled.succCurrent();
+			shuffled.addCard(deck[arr[i]]);
 		}
-		for (int i = 0; i < 30; ++i) {
-			*deck[i] = *shuffled[arr[i]];
-		}
+		deck = shuffled;
 	}
 
 private:
-	char name[20];
+	char* name;
 	Deck deck;
 	Card* hand[10];
 	size_t handCount;
