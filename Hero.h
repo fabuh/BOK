@@ -62,9 +62,9 @@ public:
 	}
 
 	void drawCard() {
+		int curr = deck.succCurrent();
 		if (handCount < 9) {
-			int curr = deck.succCurrent();
-			if (curr > 0)
+			if (curr >= 0 && curr < 30)
 				hand[handCount++] = deck.getCards()[curr];
 		}
 	}
@@ -138,7 +138,6 @@ public:
 		for (int i = 0; i < 30; ++i) {
 			arr[i] = i;
 		}
-		srand((unsigned int)time(NULL));
 		int temp, num1, num2;
 		for (int i = 0; i < 500; ++i) {
 			num1 = rand() % 30, num2 = rand() % 30;

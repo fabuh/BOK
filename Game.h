@@ -37,26 +37,27 @@ public:
 	}
 
 private:
-	void turn(size_t last, size_t turnCount) {
+	void turn(size_t &last, size_t turnCount) {
 		size_t now;
 		if (last == 1)
 			now = 2;
 		else now = 1;
 
+		if (now == 1) {
+			player1.fixMana(turnCount / 2);
+		}
+		else {
+			player2.fixMana(turnCount / 2);
+		}
+
 		system("CLS");
 
-		printf("Turn %i: Player %i's turn. \n Press Enter to continue.\n", turnCount / 2, now);
-		std::string wtfNiggaISaidPressEnter;
-		std::cin >> wtfNiggaISaidPressEnter;
+		printf("Turn %i: Player %i's turn. \n", turnCount / 2, now);
+		system("pause");
 		printField();
 		pickOption(now);
 		fixMobs(now);
-		if (now == 1) {
-			player1.fixMana(turnCount/2);
-		}
-		else {
-			player2.fixMana(turnCount/2);
-		}
+		last = now;
 	}
 
 	void pickOption(int now) {
@@ -78,25 +79,27 @@ private:
 				std::cin >> option;
 			}
 			if (option == '1') {
-				passedTurn = 0;
 				bool played = 0;
 				Card** hand;
 				hand = player->getHand();
 				player->printHand();
 				printf("Pick a card to play: ");
 				size_t num = 0;
-				while (num < 1 && num > player->getHandCount()) {
+				while (num < 1 || num > player->getHandCount()) {
 					std::cin >> num;
 				}
-				if (hand[num]->manaCost > player->getMana()) continue;
-				if (hand[num]->amIMob() == 1) {
+				if (hand[num-1]->manaCost > player->getMana()) {
+					printf("Not enough mana. \n");
+					continue;
+				}
+				if (hand[num-1]->amIMob() == 1) {
 					for (int i = 0; i < 5; ++i) {
 						if (field[i + !(now - 1) * 5] == nullptr) {
-							field[i + !(now - 1) * 5] = static_cast<Mob*>(hand[num]);
+							field[i + !(now - 1) * 5] = static_cast<Mob*>(hand[num-1]);
 							played = 1;
 							player->playedCard();
-							player->spendMana(hand[num]->manaCost);
-							hand[num] = nullptr;
+							player->spendMana(hand[num-1]->manaCost);
+							hand[num-1] = nullptr;
 							break;
 						}
 					}
@@ -109,7 +112,10 @@ private:
 						hand[num] = nullptr;
 					}
 				}
-				if(played) player->fixHand();
+				if (played) {
+					player->fixHand();
+					passedTurn = 0;
+				}
 			}
 			else if (option == '2') {
 				bool empty = true;

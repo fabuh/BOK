@@ -33,6 +33,7 @@ void createADeck(Card** cards, Deck* decks, int deckCount) {
 	}
 }
 
+//1 1 2 3 4 5 6 7 8 9 10 2 Fafla 1 2 Kartof 1 3 1 2
 int main() {
 	Card *cards[20];
 	Spell spells[5] = { Spell(5 ,Destroy, 1), Spell(2, Freeze, 1), Spell(3, DealDamage, 6), Spell(5, DealDamage, 8), Spell(7, DealDamage, 10)};
@@ -45,7 +46,8 @@ int main() {
 		size_t mana, damage;
 		int health;
 		do {
-			mana = rand() % 11 + 1;
+			mana = rand() % 121 + 1;
+			mana = sqrt(mana);
 			damage = rand() % 10 + 1;
 			health = rand() % 10 + 1;
 		} while (2*mana <= damage+health);
